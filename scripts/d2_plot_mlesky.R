@@ -10,12 +10,57 @@ plot_mlesky <- function(ofn, ofn2, Lineage_main, Lineage_matched, dedup, meanrat
   tN = readRDS( ofn )
   tN2 = readRDS( ofn2 )
   
+  ## serial intervals
+  si = c(0.0183261824523828, 0.0665923069549798, 0.10191389126982, 0.11771677925845, 
+         0.118385594423979, 0.1096347062151, 0.0961232167086674, 0.0810548507317701, 
+         0.0663831287123141, 0.0531489564979809, 0.0417894990491873, 0.0323750573522434, 
+         0.0247742309894593, 0.0187612758047075, 0.0140813981461474, 0.0104874277075941, 
+         0.00775805851929146, 0.0057048545673487, 0.00417284495185088, 
+         0.00303779925570447, 0.00220207207827872, 0.00159010774803958, 
+         0.00114418671426919, 0.000820682873170497, 0.000586918953808024, 
+         0.000418607884427491, 0.000297819806188371, 0.000211396110753381, 
+         0.000149730189133779, 0.000105841261787254, 7.46778409554949e-05, 
+         5.25983179138212e-05, 3.69864509106588e-05, 2.59685201488002e-05, 
+         1.82064265847881e-05, 1.27470903972249e-05, 8.91331245966853e-06, 
+         6.22499658997633e-06, 4.34249018810284e-06, 3.02596564560886e-06, 
+         2.10638769937432e-06, 1.46481847063118e-06, 1.01770269167467e-06
+  )
+  si = si / sum( si )
+  
+  
+ 
+  
+  
   # attach( tN )
   q_ne = t(apply( tN$ne, 1, function(x) quantile( na.omit(x), c(.5, .025, .975 )) ))
   q_mane = t(apply( tN2$ne, 1, function(x) quantile( na.omit(x), c(.5, .025, .975 )) ))
   
-  gr =  apply( tN$ne, 2, function(x) c(exp( diff(log(x)) )^6.5, NA)  ) 
-  magr =  apply( tN2$ne, 2, function(x) c(exp( diff(log(x)) )^6.5, NA)  ) 
+  
+  lb = 14 # days to look back in moving window 
+  gr =  apply( tN$ne, 2, function(x) {
+    lx = length( x) 
+    x0 = head( x , lx - lb )
+    x1 = tail(x, lx - lb ) 
+    r = c( rep(NA, lb ), log( x1 / x0 )/lb )
+    #r = c( NA, diff(log(x))   )
+    R = rep( NA, length(r) )
+    R[ !is.na(r) ] <- epitrix::r2R0( r[!is.na(r)], si )
+    R
+  }) 
+  magr =  apply( tN2$ne, 2, function(x){
+    lx = length( x) 
+    x0 = head( x , lx - lb )
+    x1 = tail(x, lx - lb ) 
+    r = c( rep(NA, lb ), log( x1 / x0 )/lb )
+    #r = c( NA, diff(log(x))   )
+    R = rep( NA, length(r) )
+    R[ !is.na(r) ] <- epitrix::r2R0( r[!is.na(r)], si )
+    R
+  })
+  
+  
+  # gr =  apply( tN$ne, 2, function(x) c(exp( diff(log(x)) )^6.5, NA)  ) 
+  # magr =  apply( tN2$ne, 2, function(x) c(exp( diff(log(x)) )^6.5, NA)  ) 
   
   q_gr = t( apply( gr, 1, function(x) quantile( na.omit(x), c(.5, .025, .975 )) ) )
   q_magr = t( apply( magr, 1, function(x) quantile( na.omit(x), c(.5, .025, .975 )) ) )
@@ -93,3 +138,15 @@ plot_mlesky(ofn ="C:/Users/lilyl/OneDrive/Documents/variantAnalysis/results/B.1.
             Lineage_main = "B.1.177",
             Lineage_matched = "Control",
             dedup = "", meanrate = 0.0005 )
+
+
+plot_mlesky(ofn ="C:/Users/lilyl/OneDrive/Documents/variantAnalysis/results/B.1.1.7_2021-02-13_n_tree_dating_10_dated_trees_mlesky.rds_mlesky.rds",
+            ofn2 ="C:/Users/lilyl/OneDrive/Documents/variantAnalysis/results/notB.1.1.7_2021-02-13_n_tree_dating_10_dated_trees_mlesky.rds_mlesky.rds", 
+            Lineage_main = "B.1.1.7",
+            Lineage_matched = "Control",
+            dedup = "", meanrate = 0.0005 )
+
+
+
+tds = readRDS("results/Sample_England_sampler1_B.1.1.7_2021-02-13_n=3000_n_tree_dating_10_dated_trees.rds")
+tds[[1]][[1]]$tip.label

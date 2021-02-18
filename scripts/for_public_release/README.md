@@ -68,7 +68,7 @@ metadata$sample_time <- decimal_date( metadata$sample_date ) # converting to dec
 
 To date the trees we have to assume a clock rate. To incorporate uncertainty around this parameter in our results we sample this from a distribution. Here we define this as a normal distribution with mean and standard deviation derived from the posterior from model-based phylodynamic analyses.
 
-Mean clock rate and 95% HPD interval: 5.9158 x 10^-4	(5.2065 x 10^-4 - 6.7144 x 10^-4)
+Mean clock rate and 95% HPD interval: 5.9158 x 10<sup>-4</sup>	(5.2065 x 10<sup>-4</sup> - 6.7144 x 10<sup>-4</sup>)
 ```r
 mr = 5.9158E-4
 mrci = 	c( 5.2065E-4, 6.7144E-4)

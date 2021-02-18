@@ -67,7 +67,7 @@ metadata$sample_time <- decimal_date( metadata$sample_date ) # converting to dec
 ## Dating the trees
 
 
-To date the trees we have to assume a clock rate. To incorporate uncertainty around this parameter in our results we sample this from a distribution. Here we define this as a normal distribution with mean and standard deviation derived from the posterior from model-based phylodynamic analyses.
+To date the trees we have to assume a clock rate. To incorporate uncertainty around this parameter in our results we sample this from a distribution. Here we define this as a normal distribution with mean and standard deviation that we have estimated from previous model-based phylodynamic analyses.
 
 Mean clock rate and 95% HPD interval: 5.9158 x 10<sup>-4</sup>	(5.2065 x 10<sup>-4</sup> - 6.7144 x 10<sup>-4</sup>)
 ```r
@@ -77,7 +77,7 @@ mrsd = diff( mrci ) / 4 / 1.96
 
 ```
 
-We are using `treedater` to date every ML tree ten times; each time will assume a clock rate drawn from the above distribution. The code to perform this is below:
+We are using `treedater` to date every maximum-likelihood tree 10 times; each time will assume a clock rate drawn from the above distribution. The code to perform this is below:
 
 
 ```r
@@ -92,7 +92,7 @@ tds_list_B.1.1.7 = date_trees(
   ncpu = 4)
 
 ```
-This will save your dated trees as an `.RDS` file. The full code (and functions) to do this are provided in `d1_date_trees.R`. Also given is the code to perform the same methods on trees from lineage B.1.177 and also control sequences from across England matched by time and place to the B.1.1.7 alignments.
+This will save your dated trees as an `.RDS` file. The full code (and functions) to do this are provided in `d1_date_trees.R`. Also given is the code to perform the same methods on trees built from lineage B.1.177, and also control sequences from across England matched by time and place to the B.1.1.7 alignments.
 
 
 
@@ -128,16 +128,16 @@ tN = readRDS( "Sample_England_sampler1_B.1.1.7_2021-02-13_n=3000_n_tree_dating_1
 q_ne = as.data.frame(t(apply( tN$ne, 1, function(x) quantile( na.omit(x), c(.5, .025, .975 )) )))
 ```
 
-Convert decimal date to epiweek so we can compare to TPP-adjusted SGTF:
+Convert decimal date to epiweek so we can compare to TPP-adjusted SGTF. The first few weeks of 2021 are interpreted as weeks 54-56 of 2020:
 
 ```r
-# Converts decimal date to epiweek; the first few weeks of 2021 are interpreted as weeks 54-56 of 2020
+# Converts decimal date to epiweek
 q_ne$epiweek = lubridate::epiweek(lubridate::date_decimal(tN$time))
 q_ne$epiweek = ifelse(q_ne$epiweek < 4, q_ne$epiweek+53, q_ne$epiweek)
 ```
 
 
-Read SGSS data
+Read SGTF data:
 ```r
 sgss_stp_new_43_56_weeks <- readRDS("data/sgss_stp_new_43_56_weeks.rds")
 sgss_stp_new_43_56_weeks
@@ -162,7 +162,7 @@ sgss_stp_new_43_56_weeks
 #   sgss_s_negative_corrected_adj1 <dbl>, sgss_s_positive_corrected_adj1 <dbl>
 ```
 
-The following produces a dataframe which combines TPP-adjusted SGTF and the estimate of Ne at each epiweek. If there are multiple timepoints in each epiweek in the `mlesky` analysis, the last timepoint in each week will be chosen to represent Ne at the *end* of the week.
+The following produces a dataframe which combines TPP-adjusted SGTF and the estimate of Ne at each epiweek. If there are multiple timepoints in each epiweek in the `mlesky` analysis, the last timepoint will be chosen to represent Ne at the *end* of the week.
 
 ```r
 # Creates data frame 
@@ -174,10 +174,7 @@ pldf <- as.data.frame(do.call(rbind, lapply(unique(sgss_stp_new_43_56_weeks$epiw
     nelb = tail( q_ne[which(q_ne$epiweek == week), ][,"2.5%"], 1)
     return(c(week = week, total_S_neg = total_S_neg, ne = ne, neub = neub, nelb = nelb))
   }
-}
-)
-)
-)
+})))
 
 # Remove any rows with NAs
 pldf = pldf[!is.na(pldf$ne),] 
@@ -188,26 +185,17 @@ Plotting the relationship:
 ```r
 pl = ggplot(pldf, aes(x = ne, y = total_S_neg)) + geom_point( shape = 15) + 
   geom_errorbarh(aes(xmin = nelb, xmax = neub, y = total_S_neg)) +
-  scale_y_continuous(
-    trans = "log10",
-    breaks = function(x) {
+  scale_y_continuous( trans = "log10", breaks = function(x) {
       brks <- extended_breaks(Q = c(1, 5))(log10(x))
       10^(brks[brks %% 1 == 0])
-    },
-    labels = math_format(format = log10)
-  ) +
-  scale_x_continuous(
-    trans = "log10",
-    breaks = function(x) {
+    }, labels = math_format(format = log10) ) +
+  scale_x_continuous(  trans = "log10", breaks = function(x) {
       brks <- extended_breaks(Q = c(1, 5))(log10(x))
-      10^(brks[brks %% 1 == 0])
-    },
-    labels = math_format(format = log10)
-  )+
+      10^(brks[brks %% 1 == 0]) },  labels = math_format(format = log10)  )+
   theme_bw() + labs(x = "Effective population size B.1.1.7", y = "TPP-adjusted SGTF case numbers") +
   theme(axis.text=element_text(size=16),
         axis.title=element_text(size=14,face="bold"), panel.grid.minor = element_blank())+ annotation_logticks() +
-  geom_label_repel(aes(x = ne, y = total_S_neg, label = week),alpha = 0.8)
+  geom_label_repel(aes(x = ne, y = total_S_neg, label = week), alpha = 0.8)
 pl
 
 ggsave( plot = pl, file = "TPP-adjusted_SGTF_vs_Ne_mlesky_to_week_56.pdf", width = 8, height = 8 )

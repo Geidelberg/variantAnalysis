@@ -85,7 +85,7 @@ metadata$sample_time <- decimal_date( metadata$sample_date ) # converting to dec
 
 # make treedater trees for each lineage
 tds_list_B.1.1.7 = date_trees(mltr_fn = "sampler1_B.1.1.7_2021-02-13_n=3000.nwk",
-                      ofn = paste0('Sample_England_', 'sampler1_B.1.1.7_2021-02-13_n=3000', '_n_tree_dating_10'), 
+                      ofn = paste0('Sample_England_sampler1_B.1.1.7_2021-02-13_n=3000_n_tree_dating_10'), 
                       metadata = metadata, 
                       meanrate = mr,
                       n_tree_dating = 10,
@@ -94,7 +94,7 @@ tds_list_B.1.1.7 = date_trees(mltr_fn = "sampler1_B.1.1.7_2021-02-13_n=3000.nwk"
 
 # make treedater trees for each lineage
 tds_list_B.1.177 = date_trees(mltr_fn = "matchSample_notB.1.1.7_lineageB.1.177_2021-02-13.nwk",
-                              ofn = paste0('Sample_England_', 'sampler1_B.1.177_2021-02-13_n=3000', '_n_tree_dating_10'), 
+                              ofn = paste0('Sample_England_sampler1_B.1.177_2021-02-13_n=3000_n_tree_dating_10'), 
                               metadata = metadata, 
                               meanrate = mr,
                               n_tree_dating = 10,
@@ -104,7 +104,7 @@ tds_list_B.1.177 = date_trees(mltr_fn = "matchSample_notB.1.1.7_lineageB.1.177_2
 
 # make treedater trees for each lineage
 tds_list_control = date_trees(mltr_fn = "matchSample_notB.1.1.7_2021-02-13.nwk",
-                              ofn = paste0('Sample_England_', 'matchSample_notB.1.1.7_2021-02-13', '_n_tree_dating_10'), 
+                              ofn = paste0('Sample_England_matchSample_control_2021-02-13_n_tree_dating_10'), 
                               metadata = metadata, 
                               meanrate = mr,
                               n_tree_dating = 10,

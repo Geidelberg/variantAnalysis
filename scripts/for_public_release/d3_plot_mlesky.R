@@ -11,7 +11,7 @@ require( epitrix )
 
 
 
-#' Plots For two lineages, plots Ne(t) and R(t), as well as the ratio of R(t). Saves plot as pdf.
+#' For two lineages, plots Ne(t) and R(t), as well as the ratio of R(t). Saves plot as pdf.
 #' @param ofn Path to mlesky RDS file for first lineage from d2_mlesky.R
 #' @param ofn2 Path to mlesky RDS file for second lineage from d2_mlesky.R
 #' @param lineage_main Name of first lineage

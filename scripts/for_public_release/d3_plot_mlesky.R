@@ -34,7 +34,6 @@ plot_mlesky <- function(ofn, ofn2, Lineage_main, Lineage_matched, si) {
     x0 = head( x , lx - lb )
     x1 = tail(x, lx - lb ) 
     r = c( rep(NA, lb ), log( x1 / x0 )/lb )
-    #r = c( NA, diff(log(x))   )
     R = rep( NA, length(r) )
     R[ !is.na(r) ] <- epitrix::r2R0( r[!is.na(r)], si )
     R
@@ -44,7 +43,6 @@ plot_mlesky <- function(ofn, ofn2, Lineage_main, Lineage_matched, si) {
     x0 = head( x , lx - lb )
     x1 = tail(x, lx - lb ) 
     r = c( rep(NA, lb ), log( x1 / x0 )/lb )
-    #r = c( NA, diff(log(x))   )
     R = rep( NA, length(r) )
     R[ !is.na(r) ] <- epitrix::r2R0( r[!is.na(r)], si )
     R

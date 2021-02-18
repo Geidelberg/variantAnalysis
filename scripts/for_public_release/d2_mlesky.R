@@ -66,7 +66,7 @@ run_mlesky <- function(tds_list, ofn, taxis = taxis) {
 
 
 
-# Time period over which to plot mlesky
+# time period over which to estimate Ne
 taxis = decimal_date( seq( as.Date( '2020-10-15') , as.Date('2021-01-24'), by = 1) )
 
 

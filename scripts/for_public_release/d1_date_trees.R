@@ -45,7 +45,7 @@ datetree <- function(mltr, metadata, meanrate)
 #' @param meanrate Mean clock rate
 #' @param meanratesd Standard deviation of mean clock rate
 #' @param ncpu Number of cores demanded for parallelisation
-#' @return A list of dated trees
+#' @return A list of a list of dated trees. First level = number of ML trees (in nwk file). Second level = number of times each ML is dated with treedater (n_tree_dating).
 date_trees <- function(mltr_fn, ofn, n_tree_dating = 10, metadata, meanrate, meanratesd, ncpu = 4, ...)
 {
   mltr = read.tree(mltr_fn)

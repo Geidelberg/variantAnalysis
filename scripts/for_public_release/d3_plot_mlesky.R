@@ -14,11 +14,11 @@ require( epitrix )
 #' Plots For two lineages, plots Ne(t) and R(t), as well as the ratio of R(t). Saves plot as pdf.
 #' @param ofn Path to mlesky RDS file for first lineage from d2_mlesky.R
 #' @param ofn2 Path to mlesky RDS file for second lineage from d2_mlesky.R
-#' @param Lineage_main Name of first lineage
-#' @param Lineage_main Name of second lineage
+#' @param lineage_main Name of first lineage
+#' @param lineage_main Name of second lineage
 #' @param si Distribution of serial intervals
 #' @return The effective population size over time of the first lineage
-plot_mlesky <- function(ofn, ofn2, Lineage_main, Lineage_matched, si) {
+plot_mlesky <- function(ofn, ofn2, lineage_main, lineage_matched, si) {
   
   # read in RDS files
   tN = readRDS( ofn )
@@ -52,8 +52,8 @@ plot_mlesky <- function(ofn, ofn2, Lineage_main, Lineage_matched, si) {
   q_magr = t( apply( magr, 1, function(x) quantile( na.omit(x), c(.5, .025, .975 )) ) )
   
   colnames( q_ne ) = colnames( q_mane ) = c( 'y', 'ylb', 'yub' )
-  pldf0 = as.data.frame( q_ne ) ; pldf0$Lineage = Lineage_main; pldf0$time = tN$time
-  pldf1 = as.data.frame( q_mane ); pldf1$Lineage = Lineage_matched; pldf1$time = tN2$time
+  pldf0 = as.data.frame( q_ne ) ; pldf0$Lineage = lineage_main; pldf0$time = tN$time
+  pldf1 = as.data.frame( q_mane ); pldf1$Lineage = lineage_matched; pldf1$time = tN2$time
   pldf = rbind( pldf0, pldf1 )
   
   p0 = ggplot( aes(x = as.Date( date_decimal( time)), y = y, colour = Lineage, fill = Lineage , ymin = ylb, ymax = yub ) , data = pldf ) +
@@ -64,8 +64,8 @@ plot_mlesky <- function(ofn, ofn2, Lineage_main, Lineage_matched, si) {
     annotation_logticks(colour = 'grey', short = unit(.05, "cm"), mid = unit(.05, "cm"), long = unit(.05, "cm"))
   
   colnames( q_gr ) = colnames( q_magr ) = c( 'y', 'ylb', 'yub' )
-  gpldf0 = as.data.frame( q_gr ) ; gpldf0$Lineage = Lineage_main; gpldf0$time = tN$time
-  gpldf1 = as.data.frame( q_magr ); gpldf1$Lineage = Lineage_matched; gpldf1$time = tN2$time
+  gpldf0 = as.data.frame( q_gr ) ; gpldf0$Lineage = lineage_main; gpldf0$time = tN$time
+  gpldf1 = as.data.frame( q_magr ); gpldf1$Lineage = lineage_matched; gpldf1$time = tN2$time
   gpldf = rbind( gpldf0, gpldf1 )
   
   Rratio = gr / magr
@@ -100,7 +100,7 @@ plot_mlesky <- function(ofn, ofn2, Lineage_main, Lineage_matched, si) {
   
   P0 = cowplot::plot_grid(legend, P0, ncol = 1, rel_heights =  c(0.1, 1))
   
-  ggsave( plot = P0, file = paste0('results/d1_', Lineage_main, '_', Lineage_matched, '.pdf'), width = 12, height = 4.5 )
+  ggsave( plot = P0, file = paste0('results/d1_', lineage_main, '_', lineage_matched, '.pdf'), width = 12, height = 4.5 )
   
   print(P0)
   
@@ -132,14 +132,14 @@ si = si / sum( si )
 # Compares B.1.1.7 to control
 Ne_t_B.1.1.7 = plot_mlesky(ofn ="Sample_England_sampler1_B.1.1.7_2021-02-13_n=3000_n_tree_dating_10_mlesky.rds",
             ofn2 ="Sample_England_matchSample_control_2021-02-13_n_tree_dating_10_mlesky.rds", 
-            Lineage_main = "B.1.1.7",
-            Lineage_matched = "Control" , si = si)
+            lineage_main = "B.1.1.7",
+            lineage_matched = "Control" , si = si)
 
 
 # Compares B.1.177 to control
 Ne_t_B.1.177 = plot_mlesky(ofn ="Sample_England_sampler1_B.1.177_2021-02-13_n=3000_n_tree_dating_10_mlesky.rds",
             ofn2 ="Sample_England_matchSample_control_2021-02-13_n_tree_dating_10_mlesky.rds", 
-            Lineage_main = "B.1.177",
-            Lineage_matched = "Control" , si = si)
+            lineage_main = "B.1.177",
+            lineage_matched = "Control" , si = si)
 
 

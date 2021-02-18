@@ -116,3 +116,112 @@ This will save your mlesky outputs as an `.RDS` file. The functions are provided
 
 
 ## Comparing Ne(t) with TPP-adjusted SGTF
+
+
+From `d2_mlesky.R` we have produced estimates of Ne(t) across various dated trees for B.1.1.7, using mlesky. Now we can plot our estimates of Ne(t) at each epiweek against the TPP-adjusted SGTF case numbers.
+
+Required R packages:
+```r
+require( hrbrthemes )
+require( scales )
+require( ggplot2 )
+require( ggrepel )
+```
+
+Read in mlesky output and calculate the median and 95% HPD across trees for Ne(t):
+
+```r
+tN = readRDS( "Sample_England_sampler1_B.1.1.7_2021-02-13_n=3000_n_tree_dating_10_mlesky.rds" )
+q_ne = as.data.frame(t(apply( tN$ne, 1, function(x) quantile( na.omit(x), c(.5, .025, .975 )) )))
+```
+
+Convert decimal date to epiweek so we can compare to TPP-adjusted SGTF:
+
+```r
+# Converts decimal date to epiweek; the first few weeks of 2021 are interpreted as weeks 54-56 of 2020
+q_ne$epiweek = lubridate::epiweek(lubridate::date_decimal(tN$time))
+q_ne$epiweek = ifelse(q_ne$epiweek < 4, q_ne$epiweek+53, q_ne$epiweek)
+```
+
+
+Read SGSS data
+```r
+sgss_stp_new_43_56_weeks <- readRDS("data/sgss_stp_new_43_56_weeks.rds")
+sgss_stp_new_43_56_weeks
+```
+
+```
+# A tibble: 588 x 15
+# Groups:   area, epiweek [588]
+   area  epiweek epistop    sgss_s_positive sgss_s_negative total_cases sgss_s_positive~ sgss_s_negative~ total_cases_adj1 regcd  probs
+   <chr>   <dbl> <date>               <int>           <int>       <int>            <int>            <int>            <int> <chr>  <dbl>
+ 1 Bath~      43 2020-10-24             241              13        1101              216               13             1101 E540~ 0.0475
+ 2 Bath~      44 2020-10-31             323              10        1373              290               10             1373 E540~ 0.126 
+ 3 Bath~      45 2020-11-07             326              10        1422              269               10             1422 E540~ 0.280 
+ 4 Bath~      46 2020-11-14             771              30        1611              717               30             1611 E540~ 0.487 
+ 5 Bath~      47 2020-11-21             505              24        1145              448               24             1145 E540~ 0.679 
+ 6 Bath~      48 2020-11-28             362              22         760              325               22              760 E540~ 0.816 
+ 7 Bath~      49 2020-12-05             327              40         755              282               40              755 E540~ 0.902 
+ 8 Bath~      50 2020-12-12             330             103         808              290              103              808 E540~ 0.951 
+ 9 Bath~      51 2020-12-19             356             245        1291              317              245             1291 E540~ 0.977 
+10 Bath~      52 2020-12-26             422             446        1936              360              446             1936 E540~ 0.990 
+# ... with 578 more rows, and 4 more variables: sgss_s_negative_corrected <dbl>, sgss_s_positive_corrected <dbl>,
+#   sgss_s_negative_corrected_adj1 <dbl>, sgss_s_positive_corrected_adj1 <dbl>
+```
+
+The following produces a dataframe which combines TPP-adjusted SGTF and the estimate of Ne at each epiweek. If there are multiple timepoints in each epiweek in the mlesky analysis, the last timepoint in each week will be chosen to represent Ne at the *end* of the week.
+
+```r
+# Creates data frame 
+pldf <- as.data.frame(do.call(rbind, lapply(unique(sgss_stp_new_43_56_weeks$epiweek), function(week) {
+  if(nrow(sgss_stp_new_43_56_weeks[sgss_stp_new_43_56_weeks$epiweek == week, ]) == 42) {# checking there are no duplicates; there are 42 STPs
+    total_S_neg = sum(sgss_stp_new_43_56_weeks[sgss_stp_new_43_56_weeks$epiweek == week, "sgss_s_negative_corrected"])
+    ne = tail( q_ne[which(q_ne$epiweek == week), ][,"50%"], 1)
+    neub = tail( q_ne[which(q_ne$epiweek == week), ][,"97.5%"], 1)
+    nelb = tail( q_ne[which(q_ne$epiweek == week), ][,"2.5%"], 1)
+    return(c(week = week, total_S_neg = total_S_neg, ne = ne, neub = neub, nelb = nelb))
+  }
+}
+)
+)
+)
+
+# Remove any rows with NAs
+pldf = pldf[!is.na(pldf$ne),] 
+``
+
+Plotting the relationship:
+
+```r
+pl = ggplot(pldf, aes(x = ne, y = total_S_neg)) + geom_point( shape = 15) + 
+  geom_errorbarh(aes(xmin = nelb, xmax = neub, y = total_S_neg)) +
+  scale_y_continuous(
+    trans = "log10",
+    breaks = function(x) {
+      brks <- extended_breaks(Q = c(1, 5))(log10(x))
+      10^(brks[brks %% 1 == 0])
+    },
+    labels = math_format(format = log10)
+  ) +
+  scale_x_continuous(
+    trans = "log10",
+    breaks = function(x) {
+      brks <- extended_breaks(Q = c(1, 5))(log10(x))
+      10^(brks[brks %% 1 == 0])
+    },
+    labels = math_format(format = log10)
+  )+
+  theme_bw() + labs(x = "Effective population size B.1.1.7", y = "TPP-adjusted SGTF case numbers") +
+  theme(axis.text=element_text(size=16),
+        axis.title=element_text(size=14,face="bold"), panel.grid.minor = element_blank())+ annotation_logticks() +
+  geom_label_repel(aes(x = ne, y = total_S_neg, label = week),alpha = 0.8)
+pl
+
+ggsave( plot = pl, file = "TPP-adjusted_SGTF_vs_Ne_mlesky_to_week_56.pdf", width = 8, height = 8 )
+
+```
+![plot of chunk unnamed-chunk-1](TPP-adjusted_SGTF_vs_Ne_mlesky_to_week_56.pdf)
+
+
+
+

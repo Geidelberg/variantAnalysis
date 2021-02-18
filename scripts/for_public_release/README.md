@@ -98,7 +98,7 @@ This will save your dated trees as an `.RDS` file. The full code (and functions)
 ## Performing mlesky on the dated trees
 
 
-From `d1_date_trees.R`, we have produced a list of dated trees. Next we define a time period over which we would like to estimate Ne(t), and run mlesky:
+From `d1_date_trees.R`, we have produced a list of dated trees. Next we define a time period over which we would like to estimate Ne(t), and run `mlesky`:
 
 
 ```r
@@ -118,7 +118,7 @@ This will save your mlesky outputs as an `.RDS` file. The functions are provided
 ## Comparing Ne(t) with TPP-adjusted SGTF
 
 
-From `d2_mlesky.R` we have produced estimates of Ne(t) across various dated trees for B.1.1.7, using mlesky. Now we can plot our estimates of Ne(t) at each epiweek against the TPP-adjusted SGTF case numbers.
+From `d2_mlesky.R` we have produced estimates of Ne(t) across various dated trees for B.1.1.7, using `mlesky`. Now we can plot our estimates of Ne(t) at each epiweek against the TPP-adjusted SGTF case numbers.
 
 Required R packages:
 ```r
@@ -188,7 +188,7 @@ pldf <- as.data.frame(do.call(rbind, lapply(unique(sgss_stp_new_43_56_weeks$epiw
 
 # Remove any rows with NAs
 pldf = pldf[!is.na(pldf$ne),] 
-``
+```
 
 Plotting the relationship:
 
@@ -218,8 +218,8 @@ pl = ggplot(pldf, aes(x = ne, y = total_S_neg)) + geom_point( shape = 15) +
 pl
 
 ggsave( plot = pl, file = "TPP-adjusted_SGTF_vs_Ne_mlesky_to_week_56.pdf", width = 8, height = 8 )
-
 ```
+
 ![plot of chunk unnamed-chunk-1](TPP-adjusted_SGTF_vs_Ne_mlesky_to_week_56.pdf)
 
 

@@ -13,7 +13,7 @@ require( epitrix )
 library( ggrepel )
 
 
-
+# Read in mlesky output
 tN = readRDS( "Sample_England_sampler1_B.1.1.7_2021-02-13_n=3000_n_tree_dating_10_mlesky.rds" )
 
 # Calculates the median and 95% HPD of Ne(t)

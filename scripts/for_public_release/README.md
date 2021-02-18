@@ -222,7 +222,7 @@ ggsave( plot = pl, file = "TPP-adjusted_SGTF_vs_Ne_mlesky_to_week_56.png", width
 
 ```
 
-Plot of TPP-adjusted SGTF against estimated effective population size using `mlesky` for each epiweek:
+Plot of TPP-adjusted SGTF against estimated effective population size using `mlesky`. Each point represents an epiweek of 2020:
 ![plot of SGTF and Ne for B.1.1.7](TPP-adjusted_SGTF_vs_Ne_mlesky_to_week_56.png)
 
 

@@ -39,7 +39,7 @@ datetree <- function(mltr, metadata, meanrate)
 
 #' Dates a list of ML trees using treedater and a dataframe containing sampling times and clock rate
 #' @param mltr_fn Path to nwk file containing a list of ML trees
-#' @param ofn Name of file to save
+#' @param ofn Name of treedater output RDS file to save
 #' @param n_tree_dating For each ML tree, this is the number of times to sample clock rate and re-date tree
 #' @param metadata A dataframe containing sequence name and sampling time
 #' @param meanrate Mean clock rate

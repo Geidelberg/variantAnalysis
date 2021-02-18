@@ -31,9 +31,10 @@ library( gridExtra )
 library( ggtree )
 library( alakazam )
 library( stringi )
+require( hrbrthemes )
+require( scales )
+require( ggrepel )
 ```
-
-
 
 
 
@@ -120,14 +121,6 @@ This will save your mlesky outputs as an `.RDS` file. The functions are provided
 
 From `d2_mlesky.R` we have produced estimates of Ne(t) across various dated trees for B.1.1.7, using `mlesky`. Now we can plot our estimates of Ne(t) at each epiweek against the TPP-adjusted SGTF case numbers.
 
-Required R packages:
-```r
-require( hrbrthemes )
-require( scales )
-require( ggplot2 )
-require( ggrepel )
-```
-
 Read in mlesky output and calculate the median and 95% HPD across trees for Ne(t):
 
 ```r
@@ -169,7 +162,7 @@ sgss_stp_new_43_56_weeks
 #   sgss_s_negative_corrected_adj1 <dbl>, sgss_s_positive_corrected_adj1 <dbl>
 ```
 
-The following produces a dataframe which combines TPP-adjusted SGTF and the estimate of Ne at each epiweek. If there are multiple timepoints in each epiweek in the mlesky analysis, the last timepoint in each week will be chosen to represent Ne at the *end* of the week.
+The following produces a dataframe which combines TPP-adjusted SGTF and the estimate of Ne at each epiweek. If there are multiple timepoints in each epiweek in the `mlesky` analysis, the last timepoint in each week will be chosen to represent Ne at the *end* of the week.
 
 ```r
 # Creates data frame 

@@ -5,12 +5,7 @@
 require( hrbrthemes )
 require( scales )
 require( ggplot2 )
-require( lubridate )
-require( cowplot )
-require( grid )
-require( gridExtra )
-require( epitrix )
-library( ggrepel )
+require( ggrepel )
 
 
 # Read in mlesky output
@@ -42,7 +37,7 @@ pldf <- as.data.frame(do.call(rbind, lapply(unique(sgss_stp_new_43_56_weeks$epiw
 )
 )
 
-# Removes any rows with NAs
+# Remove any rows with NAs
 pldf = pldf[!is.na(pldf$ne),] 
 
 # Plot

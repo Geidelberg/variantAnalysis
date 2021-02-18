@@ -1,4 +1,4 @@
-
+# NOTE THAT FOR PUBLIC RELEASE THIS IS RENAMED d3!
 require(ggplot2)
 require(lubridate)
 library(cowplot)

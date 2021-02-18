@@ -110,6 +110,11 @@ plot_mlesky <- function(ofn, ofn2, Lineage_main, Lineage_matched, dedup, meanrat
   )
   
   
+  # p1 + annotate("rect", xmin=as.Date("2020-11-05"), xmax=as.Date("2020-12-01"), ymin=0, ymax=Inf, alpha = 0.512, fill = "grey", col = "grey")+
+  #   annotate("rect", xmin=as.Date("2021-01-05"), xmax=as.Date("2021-01-23"), ymin=0, ymax=Inf, alpha = 0.512, fill = "grey", col = "grey")
+  
+  
+  
   
   P0 = cowplot::plot_grid( plotlist = list( p0, p1, p2 ), nrow = 1, align = "v" )
   
@@ -119,13 +124,14 @@ plot_mlesky <- function(ofn, ofn2, Lineage_main, Lineage_matched, dedup, meanrat
   
   print(P0)
   
-  Time=time
+  Time=tN$time
   
   # detach(tN)
   return(list(ofn = ofn, 
               time = Time,
               pldf0 = pldf0,
-              gpldf0 = gpldf0
+              gpldf0 = gpldf0,
+              q_ne = q_ne
   ))
 }
 
@@ -137,14 +143,14 @@ plot_mlesky(ofn ="C:/Users/lilyl/OneDrive/Documents/variantAnalysis/results/B.1.
             ofn2 ="C:/Users/lilyl/OneDrive/Documents/variantAnalysis/results/notB.1.1.7_2021-02-13_n_tree_dating_10_dated_trees_mlesky.rds_mlesky.rds", 
             Lineage_main = "B.1.177",
             Lineage_matched = "Control",
-            dedup = "", meanrate = 0.0005 )
+            dedup = "", meanrate = "sampled" )
 
 
 plot_mlesky(ofn ="C:/Users/lilyl/OneDrive/Documents/variantAnalysis/results/B.1.1.7_2021-02-13_n_tree_dating_10_dated_trees_mlesky.rds_mlesky.rds",
             ofn2 ="C:/Users/lilyl/OneDrive/Documents/variantAnalysis/results/notB.1.1.7_2021-02-13_n_tree_dating_10_dated_trees_mlesky.rds_mlesky.rds", 
             Lineage_main = "B.1.1.7",
             Lineage_matched = "Control",
-            dedup = "", meanrate = 0.0005 )
+            dedup = "", meanrate = "sampled" )
 
 
 

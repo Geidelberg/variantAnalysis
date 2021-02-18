@@ -218,10 +218,11 @@ pl = ggplot(pldf, aes(x = ne, y = total_S_neg)) + geom_point( shape = 15) +
 pl
 
 ggsave( plot = pl, file = "TPP-adjusted_SGTF_vs_Ne_mlesky_to_week_56.pdf", width = 8, height = 8 )
+ggsave( plot = pl, file = "TPP-adjusted_SGTF_vs_Ne_mlesky_to_week_56.png", width = 8, height = 8 )
+
 ```
 
-![plot of chunk unnamed-chunk-1](TPP-adjusted_SGTF_vs_Ne_mlesky_to_week_56.pdf)
-
+![plot of SGTF and Ne for B.1.1.7](TPP-adjusted_SGTF_vs_Ne_mlesky_to_week_56.png)
 
 
 

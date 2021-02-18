@@ -100,7 +100,7 @@ plot_mlesky <- function(ofn, ofn2, lineage_main, lineage_matched, si) {
   
   P0 = cowplot::plot_grid(legend, P0, ncol = 1, rel_heights =  c(0.1, 1))
   
-  ggsave( plot = P0, file = paste0('results/d1_', lineage_main, '_', lineage_matched, '.pdf'), width = 12, height = 4.5 )
+  ggsave( plot = P0, file = paste0('plot_', lineage_main, '_', lineage_matched, '.pdf'), width = 12, height = 4.5 )
   
   print(P0)
   

@@ -69,18 +69,20 @@ date_trees <- function(mltr_fn, ofn, n_tree_dating = 10, metadata, meanrate, mea
 }
 
 
-# Distribution of clock rate to sample
-#95% HPD interval	[5.2065E-4, 6.7144E-4]
-mr = 5.9158E-4
-mrci = 	c( 5.2065E-4, 6.7144E-4)
-mrsd = diff( mrci ) / 4 / 1.96
-
 
 # Sample times 
 metadata = read.csv( "metadata.csv" , stringsAs = FALSE , header=TRUE )
 metadata$sample_date <- as.Date( metadata$sample_date )
 metadata$sample_time <- decimal_date( metadata$sample_date ) # converting to decimal date for use in treedater
 
+
+
+
+# Distribution of clock rate to sample
+#95% HPD interval	[5.2065E-4, 6.7144E-4]
+mr = 5.9158E-4
+mrci = 	c( 5.2065E-4, 6.7144E-4)
+mrsd = diff( mrci ) / 4 / 1.96
 
 
 # make treedater trees for each lineage

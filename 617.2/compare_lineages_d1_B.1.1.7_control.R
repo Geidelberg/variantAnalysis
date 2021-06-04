@@ -27,7 +27,7 @@ mrsd = diff( mrci ) / 4 / 1.96
 
 
 # metadata 
-civetfn =  list.files(  '/cephfs/covid/bham/climb-covid19-volze/phylolatest/civet/' , patt = 'cog_global_[0-9\\-]+_metadata.csv', full.names=TRUE) #'../phylolatest/civet/cog_global_2020-12-01_metadata.csv'
+civetfn =  list.files(  '/cephfs/covid/bham/results/msa/20210604/alignments/' , patt = 'cog_[0-9\\-]+_metadata.csv', full.names=TRUE) #'../phylolatest/civet/cog_global_2020-12-01_metadata.csv'
 civmd = read.csv( civetfn , stringsAs=FALSE , header=TRUE )
 civmd$central_sample_id <-  sapply( strsplit( civmd$sequence_name , split='/' ) , '[', 2 ) # for linkage 
 civmd$sample_date <- as.Date( civmd$sample_date )

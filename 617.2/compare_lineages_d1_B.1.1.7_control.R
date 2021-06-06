@@ -29,7 +29,8 @@ mrsd = diff( mrci ) / 4 / 1.96
 # metadata 
 civetfn =  list.files(  '/cephfs/covid/bham/results/msa/20210604/alignments/' , patt = 'cog_[0-9\\-]+_metadata.csv', full.names=TRUE) #'../phylolatest/civet/cog_global_2020-12-01_metadata.csv'
 civmd = read.csv( civetfn , stringsAs=FALSE , header=TRUE )
-civmd$central_sample_id <-  sapply( strsplit( civmd$sequence_name , split='/' ) , '[', 2 ) # for linkage 
+civmd$central_sample_id=civmd$sequence_name
+# civmd$central_sample_id <-  sapply( strsplit( civmd$sequence_name , split='/' ) , '[', 2 ) # for linkage 
 civmd$sample_date <- as.Date( civmd$sample_date )
 civmd$sample_time <- decimal_date( civmd$sample_date ) 
 
@@ -61,9 +62,15 @@ datetree <- function(mltr, civmd, meanrate)
 
 
 # datetree same function as in variantAnalysis
-date_trees <- function(mltr_fn, ofn, n_tree_dating = 10, civmd, meanrate, meanratesd, ncpu = 4, ...)
+date_trees <- function(ofn, n_tree_dating = 10, civmd, meanrate, meanratesd, ncpu = 4, ...)
 {
-  mltr = read.tree(mltr_fn)
+  
+  mltr_fn = 'B.1.1.7'
+  mltr_list = list.files(  '/cephfs/covid/bham/climb-covid19-geidelbergl/617.2/f0-trees' , patt = mltr_fn, full.names=TRUE)
+  
+  mltr = lapply(mltr_list, read.tree)
+  
+  # mltr = read.tree(mltr_fn)
   
   # checking all samples have metadata attached... removing tips that aren't able to be matched
   mltr = lapply(mltr, function(tr) ape::drop.tip(tr, tr$tip.label[!tr$tip.label %in% civmd$central_sample_id]))
@@ -85,16 +92,15 @@ date_trees <- function(mltr_fn, ofn, n_tree_dating = 10, civmd, meanrate, meanra
 
 
 
-n_tree_dating = 10
+n_tree_dating = 5
 # meanrate = 0.0005
 # matchedfn = "/cephfs/covid/bham/climb-covid19-volze/subsampling/matchSample_notB.1.1.7_2021-02-13.nwk"
 # ncpu = 8
 
 
 # make treedater trees for each ML tree.
-tds_list = date_trees(mltr_fn = "/cephfs/covid/bham/climb-covid19-volze/subsampling/matchSample_notB.1.1.7_lineageB.1.177_2021-02-13.nwk",
-                      ofn = paste0('Sample_England_', 'sampler1_B.1.177_2021-02-13_n=3000', '_n_tree_dating_', n_tree_dating), civmd = civmd, 
-                      meanrate = mr,n_tree_dating = 10,
+tds_list = date_trees(ofn = paste0('Sample_England_', 'controlB.1.1.7', '_n_tree_dating_', n_tree_dating), civmd = civmd, 
+                      meanrate = mr,n_tree_dating = 5,
                       meanratesd = mrsd, ncpu = 4)
 # error likely due to not defining civmd$sample_time
 

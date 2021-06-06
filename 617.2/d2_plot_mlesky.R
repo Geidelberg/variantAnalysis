@@ -70,7 +70,8 @@ plot_mlesky <- function(ofn, ofn2, Lineage_main, Lineage_matched, dedup, meanrat
   pldf1 = as.data.frame( q_mane ); pldf1$Lineage = Lineage_matched; pldf1$time = tN2$time
   pldf = rbind( pldf0, pldf1 )
   
-  p0 = ggplot( aes(x = as.Date( date_decimal( time)), y = y, colour = Lineage, fill = Lineage , ymin = ylb, ymax = yub ) , data = pldf ) +
+  p0 = ggplot( aes(x = as.Date( date_decimal( time)), y = y, colour = Lineage, fill = Lineage , ymin = ylb, ymax = yub ) ,
+               data = pldf ) +
     geom_path(size=1) + geom_ribbon( alpha = .25, col = NA ) + xlab('') + ylab('Effective population size' ) +
     theme_minimal() + theme(legend.position='none',panel.grid.minor = element_blank())+
     scale_x_date(date_breaks = "1 month", date_labels = '%b')+theme(axis.text=element_text(size=12),
@@ -90,7 +91,8 @@ plot_mlesky <- function(ofn, ofn2, Lineage_main, Lineage_matched, dedup, meanrat
   
   r_range = range(c(gpldf$yub, Rrpldf$yub, gpldf$ylb, Rrpldf$ylb), na.rm = T)
   
-  p1 =  ggplot( aes(x = as.Date( date_decimal( time)), y = y, colour = Lineage, fill = Lineage , ymin = ylb, ymax = yub ) , data = gpldf ) +
+  p1 =  ggplot( aes(x = as.Date( date_decimal( time)), y = y, colour = Lineage, fill = Lineage , ymin = ylb, ymax = yub ) , 
+                data = gpldf ) +
     geom_path(size=1) + geom_ribbon( alpha = .25 , col = NA) + xlab('') + ylab('Reproduction number' ) + theme_minimal() +
     scale_y_log10(limits = r_range) + annotation_logticks(colour = 'grey', short = unit(.05, "cm"), mid = unit(.05, "cm"), long = unit(.05, "cm"))   +
     geom_hline( aes( yintercept=1), lty = 2 )  + theme(legend.position='', panel.grid.minor = element_blank())+
@@ -120,7 +122,7 @@ plot_mlesky <- function(ofn, ofn2, Lineage_main, Lineage_matched, dedup, meanrat
   
   P0 = cowplot::plot_grid(legend, P0, ncol = 1, rel_heights =  c(0.1, 1))
   
-  ggsave( plot = P0, file = paste0('results/d1_', Lineage_main, '_', Lineage_matched, dedup, '_', "meanrate", meanrate, '.pdf'), width = 12, height = 4.5 )
+  ggsave( plot = P0, file = paste0('./617.2/results/d1_', Lineage_main, '_', Lineage_matched, dedup, '_', "meanrate", meanrate, '.pdf'), width = 12, height = 4.5 )
   
   print(P0)
   
@@ -137,22 +139,20 @@ plot_mlesky <- function(ofn, ofn2, Lineage_main, Lineage_matched, dedup, meanrat
 
 
 
-# plot_mlesky(ofn ="C:/Users/lilyl/OneDrive/Documents/variantAnalysis/results/notB.1.1.7_2021-02-13_n_tree_dating_10_dated_trees_mlesky.rds_mlesky.rds", dedup = "", meanrate = 0.0005 )
-# plot_mlesky(ofn ="C:/Users/lilyl/OneDrive/Documents/variantAnalysis/results/B.1.177_2021-02-13_n_tree_dating_10_dated_trees_mlesky.rds_mlesky.rds", dedup = "", meanrate = 0.0005 )
-plot_mlesky(ofn ="C:/Users/lilyl/OneDrive/Documents/variantAnalysis/results/B.1.177_2021-02-13_n_tree_dating_10_dated_trees_mlesky.rds_mlesky.rds",
-            ofn2 ="C:/Users/lilyl/OneDrive/Documents/variantAnalysis/results/notB.1.1.7_2021-02-13_n_tree_dating_10_dated_trees_mlesky.rds_mlesky.rds", 
-            Lineage_main = "B.1.177",
-            Lineage_matched = "Control",
-            dedup = "", meanrate = "sampled" )
 
-
-plot_mlesky(ofn ="C:/Users/lilyl/OneDrive/Documents/variantAnalysis/results/B.1.1.7_2021-02-13_n_tree_dating_10_dated_trees_mlesky.rds_mlesky.rds",
-            ofn2 ="C:/Users/lilyl/OneDrive/Documents/variantAnalysis/results/notB.1.1.7_2021-02-13_n_tree_dating_10_dated_trees_mlesky.rds_mlesky.rds", 
-            Lineage_main = "B.1.1.7",
-            Lineage_matched = "Control",
+plot_mlesky(ofn ="./617.2/results/Sample_England_B.1.617.2_n_tree_dating_5_dated_trees_mlesky.rds_mlesky.rds",
+            ofn2 ="./617.2/results/Sample_England_controlB.1.1.7_n_tree_dating_5_dated_trees_mlesky.rds_mlesky.rds", 
+            Lineage_main = "B.1.617.2",
+            Lineage_matched = "B.1.1.7",
             dedup = "", meanrate = "sampled" )
 
 
 
-tds = readRDS("results/Sample_England_sampler1_B.1.1.7_2021-02-13_n=3000_n_tree_dating_10_dated_trees.rds")
+tds = readRDS("./617.2/results/Sample_England_B.1.617.2_n_tree_dating_10_dated_trees.rds")
 tds[[1]][[1]]$tip.label
+test=unlist(lapply(tds, function(x) x[[1]]$tip.label))
+
+tds2 = readRDS("./617.2/results/Sample_England_controlB.1.1.7_n_tree_dating_10_dated_trees.rds")
+tds2[[1]][[1]]$tip.label
+test2=unlist(lapply(tds2, function(x) x[[1]]$tip.label))
+
